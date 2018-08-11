@@ -3,7 +3,7 @@ require('./config/config.js');
 const express = require('express')
 const mongoose = require('mongoose');
 
-const app = express()
+const app = express();
 const bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
