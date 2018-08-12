@@ -1,12 +1,36 @@
-const express = require('express')
+const express = require('express');
+
+const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
 
 const app = express()
 
 app.get('/usuario', function (req, res) {
-    
-    res.json('get usuario local!')
+  
+  let desde = req.query.desde || 0;
+  desde = Number(desde);
+
+  let limite = req.query.limite || 5;
+  limite = Number(limite);
+
+  Usuario.find({ })
+        .skip(desde)
+        .limit(limite)
+        .exec( (err, usuarios) => {
+          if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+            res.json({
+              ok:true,
+              usuarios
+            });
+        }
+      )
+
 })
  
 app.post('/usuario', function(req, res) {
@@ -36,16 +60,56 @@ app.post('/usuario', function(req, res) {
 });
   app.put('/usuario/:id', function (req, res) {
     let id = req.params.id;
-    
-    res.json({
-        id
-    });
-  })
+    let body = _.pick(req.body, ['nombre', 'img', 'email', 'role', 'estado' ]);
+  
+    Usuario.findByIdAndUpdate(id, body, (err, usuarioDB) => {
 
-  app.delete('/usuario', function (req, res) {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err
+      });
+    }
+    res.json({
+      ok: true,
+      usuario: usuarioDB
+     });
+ 
+  });
+});
+
+  app.delete('/usuario/:id', function (req, res) {
     
-    res.json('delete usuario local!')
-})
+    let id = req.params.id;
+
+    let cambiaEstado = { estado: false};
+    
+    //Usuario.findByIdAndRemove(id, (err, usuarioBorrado) =>{
+    Usuario.findByIdAndUpdate(id, cambiaEstado, {new: true}, (err, usuarioBorrado) =>{
+
+    if (err) {
+        return res.status(400).json({
+          ok: false,
+          err
+      });
+    }
+      if(!usuarioBorrado) {
+        return res.status(400).json({
+          ok: false,
+          err: {
+            message: 'El usuario no existe'
+          }
+      });
+    }
+
+    res.json({
+      ok: true,
+      estado: usuarioBorrado
+    })
+
+    })
+
+  });
 
 
   module.exports = app;
