@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 app.use( require('./routes/usuarios'));
 
 
-  ////// Conexión a la base de Datos ///
+////// Conexión a la base de Datos ///
 
 mongoose.connect('mongodb://localhost:27017/noderest', (err, res) => {
   if (err) throw err;

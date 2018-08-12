@@ -9,36 +9,31 @@ app.get('/usuario', function (req, res) {
     res.json('get usuario local!')
 })
  
-app.post('/usuario', function (req, res) {
-    
-    let body = req.body;
+app.post('/usuario', function(req, res) {
 
-    let usuario = new Usuario({
+  let body = req.body;
+
+  let usuario = new Usuario({
       nombre: body.nombre,
       email: body.email,
-      password: body.password,
+      password:body.password,
       role: body.role
-    });
-
-    usuario.save((err, usuarioDB) => {
-      if(err) {
-        return resp.status(400).json({
-          ok: false,
-          err
-        });
-      }
-    });
-    resp.json({
-      ok: true,
-      usuario: usuarioDB
-    });
-    
-    
-    res.json({
-       persona: body
-    });
   });
 
+  usuario.save((err, usuarioDB) => {
+
+      if (err) {
+          return res.status(400).json({
+              ok: false,
+              err
+          });
+      }
+      res.json({
+          ok: true,
+          usuario: usuarioDB
+      });
+  });
+});
   app.put('/usuario/:id', function (req, res) {
     let id = req.params.id;
     
