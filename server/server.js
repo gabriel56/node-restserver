@@ -17,7 +17,7 @@ app.use( require('./routes/usuarios'));
 
 ////// Conexión a la base de Datos ///
 
-mongoose.connect('mongodb://localhost:27017/noderest', (err, res) => {
+mongoose.connect(process.env.URLDB, (err, res) => {
   if (err) throw err;
 
   console.log('base de datos ONLINE');
