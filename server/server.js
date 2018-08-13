@@ -12,16 +12,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use( require('./routes/usuarios'));
-
+//configuracion global de Rutas
+app.use( require('./routes/index.js'));
 
 ////// Conexión a la base de Datos ///
-
 mongoose.connect(process.env.URLDB, (err, res) => {
   if (err) throw err;
 
   console.log('base de datos ONLINE');
 });
+
 
 
 app.listen(process.env.PORT, ()=> {
